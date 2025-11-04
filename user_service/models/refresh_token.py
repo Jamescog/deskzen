@@ -3,7 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import String, Integer, DateTime
 
 from user_service.database import Base
-from user_service.utils import get_current_ethiopian_time
+from user_service.utils import get_current_ethiopian_time, get_current_utc_time
 
 
 class RefreshToken(Base):
@@ -13,7 +13,7 @@ class RefreshToken(Base):
     user_id: Mapped[int] = mapped_column(Integer, nullable=False)
     token: Mapped[str] = mapped_column(String(512), unique=True, nullable=False)
     expires_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=get_current_ethiopian_time, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=get_current_utc_time, nullable=False)
 
     def __repr__(self) -> str:
         """String representation of the RefreshToken instance."""
@@ -27,6 +27,8 @@ class RefreshToken(Base):
             "token": self.token,
             "expires_at": self.expires_at.isoformat(),
             "created_at": self.created_at.isoformat(),
+            "created_at_ethiopian": get_current_ethiopian_time(self.created_at).isoformat(),
+            "expires_at_ethiopian": get_current_ethiopian_time(self.expires_at).isoformat(),
         }
 
     def is_expired(self) -> bool:

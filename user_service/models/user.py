@@ -23,8 +23,8 @@ class User(Base):
     department_id: Mapped[int | None] = mapped_column(Integer, nullable=True)
     role: Mapped[UserRoleEnum] = mapped_column(SQLEnum(UserRoleEnum), default=UserRoleEnum.EMPLOYEE, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=get_current_ethiopian_time, nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, default=get_current_ethiopian_time, onupdate=get_current_ethiopian_time, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=get_current_utc_time, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime, default=get_current_utc_time, onupdate=get_current_utc_time, nullable=False)
 
 
     def __repr__(self) -> str:
@@ -43,8 +43,8 @@ class User(Base):
             "is_active": self.is_active,
             "created_at_utc": self.created_at.isoformat(),
             "updated_at_utc": self.updated_at.isoformat(),
-            "created_at_ethiopian": get_current_ethiopian_time().isoformat(),
-            "updated_at_ethiopian": get_current_ethiopian_time().isoformat(),
+            "created_at_ethiopian": get_current_ethiopian_time(self.created_at).isoformat(),
+            "updated_at_ethiopian": get_current_ethiopian_time(self.updated_at).isoformat(),
         }
 
 
